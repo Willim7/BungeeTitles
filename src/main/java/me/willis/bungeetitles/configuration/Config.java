@@ -28,6 +28,7 @@ public class Config {
 
         file = new File(plugin.getDataFolder(), "config.yml");
 
+        configurationProvider = ConfigurationProvider.getProvider(YamlConfiguration.class);
 
         if (!file.exists()) {
             try {
@@ -35,16 +36,14 @@ public class Config {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
 
-        configurationProvider = ConfigurationProvider.getProvider(YamlConfiguration.class);
-
-        try {
-            configuration = configurationProvider.load(file);
-            configuration.set("Title", "Alert");
-            saveConfiguration();
-        } catch (IOException e) {
-            e.printStackTrace();;
+            try {
+                configuration = configurationProvider.load(file);
+                configuration.set("Title", "Alert");
+                saveConfiguration();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
