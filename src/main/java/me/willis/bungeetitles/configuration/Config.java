@@ -1,7 +1,6 @@
 package me.willis.bungeetitles.configuration;
 
 import me.willis.bungeetitles.BungeeTitles;
-import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
@@ -15,7 +14,6 @@ public class Config {
 
     private File file;
     private Configuration configuration;
-    private ConfigurationProvider configurationProvider;
 
     public Config(BungeeTitles plugin) {
         this.plugin = plugin;
@@ -28,8 +26,6 @@ public class Config {
 
         file = new File(plugin.getDataFolder(), "config.yml");
 
-        configurationProvider = ConfigurationProvider.getProvider(YamlConfiguration.class);
-
         if (!file.exists()) {
             try {
                 file.createNewFile();
@@ -38,9 +34,15 @@ public class Config {
             }
 
             try {
-                configuration = configurationProvider.load(file);
+                configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(plugin.getDataFolder(), "config.yml"));
                 configuration.set("Title", "Alert");
                 saveConfiguration();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(plugin.getDataFolder(), "config.yml"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -53,7 +55,7 @@ public class Config {
 
     private void saveConfiguration() {
         try {
-            configurationProvider.save(configuration, file);
+            ConfigurationProvider.getProvider(YamlConfiguration.class).save(configuration, new File(plugin.getDataFolder(), "config.yml"));
         } catch (IOException e) {
             e.printStackTrace();
         }
